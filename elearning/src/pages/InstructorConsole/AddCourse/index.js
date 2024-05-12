@@ -5,25 +5,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Swal from "sweetalert2";
-import MyDrop from "./MyDrop";
+import MyDrop from "../CourseContent/MyDrop";
 
-const ContentAdd = (prop) => {
+const AddCourse = () => {
   const [open, setOpen] = useState(false);
   const [addNew, setAddNew] = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
   const [acceptedFile, setAcceptedFile] = useState(null);
-  const course = useState(prop.id);
-
 
   const handleFileAccepted = (file) => {
     setAcceptedFile(file);
   };
-
-
-  useEffect(() => {
-    console.log(acceptedFile)
-    }, [acceptedFile]);
 
   const handleAddValue = (field, value) => {
     setAddNew((previous) => ({
@@ -39,24 +31,6 @@ const ContentAdd = (prop) => {
     }));
   };
 
-  useEffect(() => {
-    if (addNew && !addNew.title == "") {
-      handleErrors("title", false);
-    } else {
-      handleErrors("title", true);
-    }
-  }, [addNew.title]);
-
-  useEffect(() => {
-    if (addNew && !addNew.description == "") {
-      handleErrors("description", false);
-    } else {
-      handleErrors("description", true);
-    }
-  }, [addNew.description]);
-
-  console.log(prop);
-
   const handleOpen = () => {
     setOpen(true);
   };
@@ -66,6 +40,14 @@ const ContentAdd = (prop) => {
     setAddNew({});
     setFieldErrors({});
   };
+
+  useEffect(() => {
+    if (addNew && !addNew.title == "") {
+      handleErrors("title", false);
+    } else {
+      handleErrors("title", true);
+    }
+  }, [addNew.title]);
 
   const handleAdd = () => {
     console.log("dads");
@@ -101,9 +83,13 @@ const ContentAdd = (prop) => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button variant="contained" onClick={() => handleOpen()}>
-          Add Content
+      <Grid item xs={12} sx={{display:'flex',justifyContent:'flex-end'}}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handleOpen()}
+        >
+          Add New Course
         </Button>
       </Grid>
 
@@ -112,27 +98,48 @@ const ContentAdd = (prop) => {
         onClose={handleClose}
         PaperProps={{
           component: "form",
+          onSubmit: (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.currentTarget);
+            const formJson = Object.fromEntries(formData.entries());
+            const email = formJson.email;
+            console.log(email);
+            handleClose();
+          },
         }}
       >
-        <DialogTitle>Add Content</DialogTitle>
+        <DialogTitle>Add Course</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Add your next content here. You can add a video, a document, or a
-            image. This may take time based on your connection
+            Add your next Course here. You can add course related image. This may take time based on your connection
           </DialogContentText>
           <TextField
-            value={addNew.title}
+            value={addNew.courseId}
             autoFocus
             required
             margin="dense"
-            id="title"
-            name="title"
-            label="Title"
+            id="courseId"
+            name="courseId"
+            label="Course ID"
             fullWidth
             variant="standard"
-            error={fieldErrors.title}
-            helperText={fieldErrors.title && "Title is required"}
-            onChange={(e) => handleAddValue("title", e.target.value)}
+            error={fieldErrors.courseId}
+            helperText={fieldErrors.courseId && "Course ID is required"}
+            onChange={(e) => handleAddValue("courseId", e.target.value)}
+          />
+          <TextField
+            value={addNew.name}
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="name"
+            label="Course Name"
+            fullWidth
+            variant="standard"
+            error={fieldErrors.name}
+            helperText={fieldErrors.name && "Course name is required"}
+            onChange={(e) => handleAddValue("name", e.target.value)}
           />
           <TextField
             value={addNew.description}
@@ -150,7 +157,7 @@ const ContentAdd = (prop) => {
             onChange={(e) => handleAddValue("description", e.target.value)}
           />
           <div className="App">
-            <h1>Drop file below </h1>
+            <h1>Drop Image below </h1>
             <MyDrop onFileAccepted={handleFileAccepted} />
           </div>
         </DialogContent>
@@ -163,4 +170,4 @@ const ContentAdd = (prop) => {
   );
 };
 
-export default ContentAdd;
+export default AddCourse;

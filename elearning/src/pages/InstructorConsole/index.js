@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { CardActionArea, CardActions } from "@mui/material";
+import { Button, CardActionArea, CardActions } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import CourseContent from "./CourseContent";
 import { useUserName } from "../../hooks/customHooks";
+import AddCourse from "./AddCourse";
 
 const data = [
   {
@@ -80,6 +81,9 @@ const InstructorConsole = () => {
         </Grid>
       <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h2">My Courses</Typography>
+      </Grid>
+      <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <AddCourse />
       </Grid>
       {data.map((course, index) => (
         <Grid
