@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import CourseContent from "./CourseContent";
+import { useUserName } from "../../hooks/customHooks";
 
 const data = [
   {
@@ -57,6 +58,7 @@ const data = [
 
 const InstructorConsole = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const username = useUserName();
 
   const handleOnCourseClick = (course) => {
     setSelectedCourse(course);
@@ -73,6 +75,9 @@ const InstructorConsole = () => {
 
   return (
     <Grid container spacing={3}>
+      <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Typography variant="body2">Welcome, {username}!</Typography>
+        </Grid>
       <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h2">My Courses</Typography>
       </Grid>

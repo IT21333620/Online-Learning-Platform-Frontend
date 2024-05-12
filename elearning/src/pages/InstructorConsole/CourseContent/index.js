@@ -5,7 +5,7 @@ import TimelineDot from "@mui/lab/TimelineDot";
 import TimelineItem from "@mui/lab/TimelineItem";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineSeparator from "@mui/lab/TimelineSeparator";
-import { Button, Card, CardActionArea, Grid, TextField } from "@mui/material";
+import { Button, Card, CardActionArea, Grid, TextField, Box } from "@mui/material";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
@@ -20,6 +20,8 @@ import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import ReactPlayer from "react-player";
 import Swal from "sweetalert2";
+import ContentAdd from "./ContentAdd";
+import { useUserName } from "../../../hooks/customHooks";
 
 const data = {
   id: "663a620baff39f74c16e50f9",
@@ -119,6 +121,44 @@ const CourseConetetn = ({ course, onBack }) => {
   const [contentTitle, setContentTitle] = useState("");
   const [contentDescription, setContentDescription] = useState("");
 
+  const username = useUserName();
+
+  function renderMedia(url) {
+    const extension = url.split("?")[0].split(".").pop();
+
+    switch (extension) {
+      case "mp4":
+        return (
+          <ReactPlayer
+            url={url}
+            style={{ position: "absolute", top: 0, left: 0 }}
+            width="100%"
+            height="100%"
+            playing
+            controls
+          />
+        );
+      case "jpg":
+      case "png":
+      case "jpeg":
+        return (
+          <img
+            src={url}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              maxWidth: "100%",
+              maxHeight: "100%",
+            }}
+            alt="Media content"
+          />
+        );
+      default:
+        return null;
+    }
+  }
+
   const handleClickOpen = (id) => {
     setOpen(true);
     setUpdateId(id);
@@ -214,9 +254,19 @@ const CourseConetetn = ({ course, onBack }) => {
       <Grid
         item
         xs={8}
-        sx={{ display: "flex", justifyContent: "center", mt: 5 }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          mt: 5,
+        }}
       >
-        <Typography variant="body1">{data.description}</Typography>
+        <Box>
+          <Typography variant="body1">{data.description}</Typography>
+        </Box>
+        <Box>
+          <Typography variant="body2">Conducted by: {username}</Typography>
+        </Box>
       </Grid>
       <Grid
         item
@@ -226,10 +276,8 @@ const CourseConetetn = ({ course, onBack }) => {
         <Typography variant="h4">Course Content</Typography>
       </Grid>
       <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button variant="contained" onClick={handleOpen}>
-            Add Content
-        </Button>
-        </Grid>
+        <ContentAdd id={data.courseId} />
+      </Grid>
       <Grid
         item
         xs={3}
@@ -250,7 +298,11 @@ const CourseConetetn = ({ course, onBack }) => {
           ))}
         </Timeline>
       </Grid>
-      <Grid item xs={9} sx={{ display: "flex", justifyContent: "center", mt: 5 }}>
+      <Grid
+        item
+        xs={9}
+        sx={{ display: "flex", justifyContent: "center", mt: 5 }}
+      >
         <Grid container spacing={2}>
           {courseData.map((content, index) => (
             <Grid
@@ -294,14 +346,7 @@ const CourseConetetn = ({ course, onBack }) => {
                         }}
                       >
                         {/* 16:9 aspect ratio */}
-                        <ReactPlayer
-                          url={content.media.url}
-                          style={{ position: "absolute", top: 0, left: 0 }}
-                          width="100%"
-                          height="100%"
-                          playing
-                          controls
-                        />
+                        {renderMedia(content.media.url)}
                       </div>
                     </Grid>
                     <Grid
@@ -384,7 +429,7 @@ const CourseConetetn = ({ course, onBack }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={()=> handleUpdate(updateId)}>Update</Button>
+          <Button onClick={() => handleUpdate(updateId)}>Update</Button>
         </DialogActions>
       </Dialog>
     </Grid>

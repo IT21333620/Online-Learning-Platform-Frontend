@@ -34,3 +34,10 @@ export const useUserRole = () => {
     return "learner";
   }
 };
+
+export const useUserName = () => {
+  const { keycloak } = useKeycloak();
+  const userName = keycloak?.tokenParsed?.name;
+
+  return userName;
+};
