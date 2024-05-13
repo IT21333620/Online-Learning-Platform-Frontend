@@ -8,7 +8,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { apiDefinitions } from "../../api/apiDefinitions";
+import apiDefinitions from "../../api/apiDefinitions";
 
 const UserCard = ({ user }) => {
   return (
