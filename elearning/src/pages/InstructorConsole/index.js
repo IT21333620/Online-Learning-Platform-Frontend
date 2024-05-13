@@ -20,7 +20,7 @@ const data = [
     description: "Detailed course about Distributed Systems and it's nature",
     createdAt: "2024-05-07T17:16:59.016+00:00",
     updatedAt: null,
-    url: null,
+    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/ba88e563-081f-4482-8994-f2f874b89df9.png?alt=media",
   },
   {
     id: "663b877583bee14060f7b032",
@@ -31,7 +31,7 @@ const data = [
     description: "Learn Artificial Inteligance A to Z with practical examples",
     createdAt: "2024-05-08T14:08:52.988+00:00",
     updatedAt: null,
-    url: null,
+    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/ae759d7e-ecef-454d-adbf-8050cda72009.jpg?alt=media",
   },
   {
     id: "663b881f83bee14060f7b033",
@@ -42,7 +42,7 @@ const data = [
     description: "Learn Artificial Inteligance & Machine Learning A to Z",
     createdAt: "2024-05-08T14:11:43.932+00:00",
     updatedAt: null,
-    url: null,
+    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/5c085329-7c09-4413-9992-a06e8ca308e1.jpeg?alt=media",
   },
   {
     id: "663dae641a0930661c35c3ae",
@@ -78,7 +78,7 @@ const InstructorConsole = () => {
     <Grid container spacing={3}>
       <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Typography variant="body2">Welcome, {username}!</Typography>
-        </Grid>
+      </Grid>
       <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
         <Typography variant="h2">My Courses</Typography>
       </Grid>
@@ -88,10 +88,10 @@ const InstructorConsole = () => {
       {data.map((course, index) => (
         <Grid
           item
-          xs={12} 
-          sm={6} 
-          md={4} 
-          lg={4} 
+          xs={12}
+          sm={6}
+          md={4}
+          lg={4}
           xl={3}
           sx={{ display: "flex", justifyContent: "center" }}
           key={index}

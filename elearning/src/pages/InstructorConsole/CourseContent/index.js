@@ -32,7 +32,7 @@ const data = {
   description: "Detailed course about Distributed Systems and it's nature",
   createdAt: "2024-05-07T17:16:59.016+00:00",
   updatedAt: null,
-  url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/30939ab3-eeb8-455d-9e8b-1b21bc73e177.png?alt=media",
+  url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/6ecec7c8-e25d-4efd-a46a-6c385fa0dfa8.jpg?alt=media",
 };
 
 const courseData = [
@@ -57,7 +57,7 @@ const courseData = [
     description: "Web socket and message passing",
     media: {
       id: "663cfde1d88f0333b9f6a22a",
-      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/e5c64e54-54b1-4ef3-a054-d5c8953c670e.png?alt=media",
+      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/05efda6a-36ee-4599-90cd-69b8cdf0717d.jpg?alt=media",
       createdAt: "2024-05-09T16:46:24.761+00:00",
       updatedAt: null,
     },
@@ -71,7 +71,7 @@ const courseData = [
     description: "Web socket and message passing",
     media: {
       id: "663d6885f7ee5f0df75d3e4b",
-      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/b990758f-2aea-4dac-8490-3b4022acd8c8.jpg?alt=media",
+      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/b5c30078-ce18-4cd1-841d-3e9f1ae1308a.png?alt=media",
       createdAt: "2024-05-10T00:21:22.636+00:00",
       updatedAt: null,
     },

@@ -8,6 +8,7 @@ import {
   Box,
   Button,
 } from "@mui/material";
+import { apiDefinitions } from "../../api/apiDefinitions";
 
 const UserCard = ({ user }) => {
   return (
@@ -88,7 +89,7 @@ const AdminConsole = () => {
 
   const fetchTransactions = async () => {
     try {
-      const response = await fetch("http://localhost:8080/api/payments");
+      const response = await apiDefinitions.getAllTransactions();
       if (!response.ok) {
         throw new Error("Failed to fetch transactions");
       }
