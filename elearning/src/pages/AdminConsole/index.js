@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Grid,
   Card,
@@ -80,6 +80,25 @@ const TransactionCard = ({ transaction }) => {
 };
 
 const AdminConsole = () => {
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/payments");
+      if (!response.ok) {
+        throw new Error("Failed to fetch transactions");
+      }
+      const data = await response.json();
+      setTransactions(data);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
   const users = [
     {
       id: 1,
@@ -142,10 +161,10 @@ const AdminConsole = () => {
     },
   ];
 
-  const transactions = [
-    { id: 1, userId: 1, courseId: 1, amount: "$49.99" },
-    { id: 2, userId: 2, courseId: 2, amount: "$39.99" },
-  ];
+  // const transactions = [
+  //   { id: 1, userId: 1, courseId: 1, amount: "$49.99" },
+  //   { id: 2, userId: 2, courseId: 2, amount: "$39.99" },
+  // ];
 
   return (
     <Grid container spacing={3}>

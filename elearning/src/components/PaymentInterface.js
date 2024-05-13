@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
-  Typography,
   TextField,
   Button,
   Grid,
+  CircularProgress,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 
 const StripeLogo = styled("img")({
   width: 150,
@@ -17,8 +18,41 @@ const StripeLogo = styled("img")({
 });
 
 const PaymentInterface = () => {
-  const handleSubmit = (e) => {
+  const [formData, setFormData] = useState({
+    stripeToken: "",
+    userId: "",
+    courseId: "",
+    amount: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:8080/api/charge", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to make payment");
+      }
+      navigate("/payment-success");
+    } catch (error) {
+      console.error("Error making payment:", error);
+      navigate("/payment-cancel");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +78,8 @@ const PaymentInterface = () => {
                   name="stripeToken"
                   label="Stripe Token"
                   variant="outlined"
+                  value={formData.stripeToken}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -53,6 +89,8 @@ const PaymentInterface = () => {
                   name="userId"
                   label="User ID"
                   variant="outlined"
+                  value={formData.userId}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -62,6 +100,8 @@ const PaymentInterface = () => {
                   name="courseId"
                   label="Course ID"
                   variant="outlined"
+                  value={formData.courseId}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -71,6 +111,8 @@ const PaymentInterface = () => {
                   name="amount"
                   label="Amount"
                   variant="outlined"
+                  value={formData.amount}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -79,8 +121,9 @@ const PaymentInterface = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
+                  disabled={loading}
                 >
-                  Pay Now
+                  {loading ? <CircularProgress size={24} /> : "Pay Now"}
                 </Button>
               </Grid>
             </Grid>
