@@ -458,6 +458,22 @@ const ProgressCriteria = () => {
   const courseData = getCourseCountMockData[0].data;
   const uniqueCourseCount = Object.keys(courseData).length;
 
+  const getCourseCountData = getCourseCountMockData[0].data;
+
+  // Initialize variables to store true and false counts
+  let trueCount = 0;
+  let falseCount = 0;
+
+  // Iterate over the course data to sum up the true and false counts
+  Object.values(getCourseCountData).forEach((course) => {
+    trueCount += course.true || 0;
+    falseCount += course.false || 0;
+  });
+
+  // Calculate the percentage
+  const coursePercent = (trueCount / (trueCount + falseCount)) * 100;
+  const coursePercentage = coursePercent.toFixed(2);
+
   const studentsData = Object.keys(getUserCountMockData[0].data).map((key) => ({
     name: key,
     true: getUserCountMockData[0].data[key].true || 0,
@@ -595,36 +611,42 @@ const ProgressCriteria = () => {
 
               <Grid item xs={12}>
                 <Grid container spacing={6}>
-                  <Grid item xs={2}>
+                  <Grid
+                    item
+                    xs={2}
+                    sx={{ position: "relative", left: "250px" }}
+                  >
                     <CircularProgressbar
                       value={roundedPercentage}
                       text={`${roundedPercentage}%`}
-                      styles={buildStyles({
-                        // Adjust the size of the CircularProgressbar here
-                        // Example: height: "100px", width: "100px"
-                      })}
+                      styles={buildStyles({})}
                     />
                   </Grid>
                   <Grid
                     item
                     xs={2}
-                    sx={{ position: "relative", left: "150px" }}
+                    sx={{ position: "relative", left: "550px" }}
                   >
                     <CircularProgressbar
-                      value={roundedPercentage}
-                      text={`${roundedPercentage}%`}
-                      styles={buildStyles({
-                        // Adjust the size of the CircularProgressbar here
-                        // Example: height: "100px", width: "100px"
-                      })}
+                      value={coursePercentage}
+                      text={`${coursePercentage}%`}
+                      styles={buildStyles({})}
                     />
                   </Grid>
                   <Grid item xs={8}></Grid>
-                  <Grid item xs={2}>
+                  <Grid
+                    item
+                    xs={2}
+                    sx={{ position: "relative", left: "270px" }}
+                  >
                     <Typography>Student Course Completions</Typography>
                   </Grid>
-                  <Grid item xs={2}>
-                    <Typography>Student Course Completions</Typography>
+                  <Grid
+                    item
+                    xs={2}
+                    sx={{ position: "relative", left: "580px" }}
+                  >
+                    <Typography>Total Course Completions</Typography>
                   </Grid>
                 </Grid>
               </Grid>
