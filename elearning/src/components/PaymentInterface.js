@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
+import { apiDefinitions } from "../api/apiDefinitions";
 
 const StripeLogo = styled("img")({
   width: 150,
@@ -36,13 +37,7 @@ const PaymentInterface = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8080/api/charge", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await apiDefinitions.createPayment(formData);
       if (!response.ok) {
         throw new Error("Failed to make payment");
       }
