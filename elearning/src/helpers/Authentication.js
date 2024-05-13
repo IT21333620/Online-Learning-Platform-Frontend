@@ -10,22 +10,25 @@ const Authentication = ({ children }) => {
         if (!keycloak.authenticated) {
           keycloak.login()
         } else {
+          // Save the token in local storage
+          localStorage.setItem('keycloakToken', keycloak.token);
+     
           keycloak.onAuthError = () => {
             keycloak.logout()
           }
-  
+     
           keycloak.onTokenExpired = () => {
             keycloak.updateToken(300).catch(() => {
               keycloak.logout()
             })
           }
-  
+     
           keycloak.onAuthLogout = () => {
             keycloak.login()
           }
         }
       }
-    }, [keycloak, initialized])
+    }, [initialized, keycloak]);
   
     return keycloak.authenticated ? children : <Loader />
   }

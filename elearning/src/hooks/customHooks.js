@@ -8,6 +8,14 @@ export const useUserID = () => {
   return userID;
 };
 
+//capture the token from the keycloak object
+export const useToken = () => {
+  const { keycloak } = useKeycloak();
+  const token = keycloak?.token;
+
+  return token;
+};
+
 export const useCurrentRoute = () => {
   const location = useLocation();
   const currentRoute = location.pathname;
