@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useNavigate } from "react-router-dom";
-import { apiDefinitions } from "../api/apiDefinitions";
+import apiDefinitions from "../api/apiDefinitions";
 
 const StripeLogo = styled("img")({
   width: 150,
