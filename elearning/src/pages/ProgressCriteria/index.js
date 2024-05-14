@@ -18,8 +18,8 @@ import {
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
-import React from "react";
+import apiDefinitions from "../../api/apiDefinitions";
+import React, { useEffect, useState } from "react";
 import StickyNote2Icon from "@mui/icons-material/StickyNote2";
 import PersonIcon from "@mui/icons-material/Person";
 import LocalFireDepartmentTwoToneIcon from "@mui/icons-material/LocalFireDepartmentTwoTone";
@@ -31,356 +31,6 @@ import {
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import LinearProgress from "@mui/material/LinearProgress";
-
-const mockProgressData = [
-  {
-    data: {
-      learnerProgressList: [
-        {
-          id: "663ac342cdfd495ab5b437b9",
-          userId: "u001",
-          courseId: "c001",
-          course: null,
-          createdAt: "2024-05-08T00:11:46.485+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663ac54acdfd495ab5b437ba",
-          userId: "u002",
-          courseId: "c002",
-          course: null,
-          createdAt: "2024-05-08T00:20:26.721+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663ac55acdfd495ab5b437bb",
-          userId: "u003",
-          courseId: "c003",
-          course: null,
-          createdAt: "2024-05-08T00:20:42.318+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663bad76fdfcde4f4e378c20",
-          userId: "user01@2",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-08T16:51:01.706+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663c124526ab5b7371e8d452",
-          userId: "user01@3",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-09T00:01:08.736+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663c2485b2eb5406f1b51cdf",
-          userId: "user01@4",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-09T01:19:00.956+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663d8077d5e350650c8ca705",
-          userId: "u005",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-10T02:03:34.411+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663d8391dfa5de44481bc962",
-          userId: "u006",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-10T02:16:48.700+00:00",
-          updatedAt: null,
-          status: null,
-          data: null,
-        },
-        {
-          id: "663d89faf9a86a0d80a95ea3",
-          userId: "u007",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-10T02:44:09.635+00:00",
-          updatedAt: null,
-          status: "false",
-          data: null,
-        },
-        {
-          id: "663d8a11f9a86a0d80a95ea4",
-          userId: "u008",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-10T02:44:33.243+00:00",
-          updatedAt: "2024-05-10T15:16:36.120+00:00",
-          status: "true",
-          data: null,
-        },
-        {
-          id: "663db14bf9a86a0d80a95ea5",
-          userId: "u009",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-10T05:31:55.329+00:00",
-          updatedAt: "2024-05-10T06:58:32.905+00:00",
-          status: "true",
-          data: null,
-        },
-        {
-          id: "663e491a37a76568decdbe7d",
-          userId: "user01@5",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-10T16:19:37.701+00:00",
-          updatedAt: null,
-          status: "false",
-          data: null,
-        },
-        {
-          id: "663f0b56f40fe57550d4a000",
-          userId: "user01@6",
-          courseId: "C001",
-          course: {
-            data: {
-              id: "663b877583bee14060f7b032",
-              courseId: "C001",
-              name: "Artificial Inteligance",
-              conductorId: "CD001",
-              approved: false,
-              description: "Learn Artificial Inteligance A to Z",
-              createdAt: "2024-05-08T14:08:52.988+00:00",
-              updatedAt: null,
-              url: null,
-            },
-            message: "Course found",
-            status: 200,
-          },
-          createdAt: "2024-05-11T06:08:21.365+00:00",
-          updatedAt: null,
-          status: "false",
-          data: null,
-        },
-      ],
-      totalCount: 13,
-      trueCount: 2,
-    },
-    message: "Progress retrieved successfully",
-    status: 200,
-  },
-];
-
-const getUserCountMockData = [
-  {
-    data: {
-      u002: {
-        unknown: 1,
-      },
-      u001: {
-        unknown: 1,
-      },
-      u003: {
-        unknown: 1,
-      },
-      "user01@4": {
-        unknown: 1,
-      },
-      "user01@5": {
-        false: 1,
-      },
-      "user01@6": {
-        false: 1,
-      },
-      u009: {
-        true: 2,
-        false: 1,
-      },
-      "user01@2": {
-        unknown: 1,
-      },
-      "user01@3": {
-        unknown: 1,
-      },
-      u006: {
-        unknown: 1,
-      },
-      u005: {
-        unknown: 1,
-      },
-      u008: {
-        true: 1,
-      },
-      u007: {
-        false: 1,
-      },
-    },
-    message: "UserId counts retrieved successfully",
-    status: 200,
-  },
-];
-
-const getCourseCountMockData = [
-  {
-    data: {
-      C001: {
-        false: 3,
-        true: 2,
-        unknown: 5,
-      },
-      c002: {
-        unknown: 1,
-        false: 3,
-        true: 10,
-      },
-      c001: {
-        unknown: 1,
-      },
-      c003: {
-        false: 3,
-        true: 6,
-        unknown: 1,
-      },
-    },
-    message: "CourseId counts retrieved successfully",
-    status: 200,
-  },
-];
 
 function CustomTabPanel(props) {
   const { children, value, index, studentsData, ...other } = props;
@@ -455,49 +105,114 @@ function a11yProps(index) {
 }
 
 const ProgressCriteria = () => {
-  const courseData = getCourseCountMockData[0].data;
-  const uniqueCourseCount = Object.keys(courseData).length;
+  const [mockProgressData, setMockProgressData] = useState([]);
+  const [getCourseCountMockData, setGetCourseCountMockData] = useState([]);
+  const [getUserCountMockData, setGetUserCountMockData] = useState([]);
+  const [trueProgressCount, setTrueProgressCount] = useState(0);
+  const [totalProgressCount, setTotalProgressCount] = useState(0);
+  let coursePercentage = NaN;
+  let roundedPercentage = 0.0;
 
-  const getCourseCountData = getCourseCountMockData[0].data;
+  useEffect(() => {
+    fetchAllProgress();
+    fetchAllProgressByCourse();
+    fetchAllProgressByStudent();
+  }, []);
 
-  // Initialize variables to store true and false counts
+  const fetchAllProgress = async () => {
+    try {
+      const response = await apiDefinitions.getAllProgress();
+      console.log(response);
+      if (response.data.status === 200) {
+        setMockProgressData(response.data);
+        setTrueProgressCount(response.data.data.trueCount);
+        setTotalProgressCount(response.data.data.totalCount);
+      }
+    } catch (error) {
+      console.error("Error fetching progress:", error);
+    }
+  };
+
+  const fetchAllProgressByCourse = async () => {
+    try {
+      const response = await apiDefinitions.getAllProgressByCourse();
+      console.log(response);
+      if (response.data.status === 200) {
+        setGetCourseCountMockData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  const fetchAllProgressByStudent = async () => {
+    try {
+      const response = await apiDefinitions.getAllProgressByStudent();
+      console.log(response);
+      if (response.data.status === 200) {
+        console.log("shittttttttttt", response.data.data);
+        setGetUserCountMockData(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+    }
+  };
+
+  const courseData = getCourseCountMockData.data;
+
+  const uniqueCourseCount = courseData ? Object.keys(courseData).length : 0;
+
+  // const getCourseCountData = getCourseCountMockData.data;
+
   let trueCount = 0;
   let falseCount = 0;
 
-  // Iterate over the course data to sum up the true and false counts
-  Object.values(getCourseCountData).forEach((course) => {
-    trueCount += course.true || 0;
-    falseCount += course.false || 0;
-  });
+  if (courseData !== undefined) {
+    Object.values(courseData).forEach((course) => {
+      trueCount += course.true || 0;
+      falseCount += course.false || 0;
+    });
 
-  // Calculate the percentage
-  const coursePercent = (trueCount / (trueCount + falseCount)) * 100;
-  const coursePercentage = coursePercent.toFixed(2);
+    const coursePercent = (trueCount / (trueCount + falseCount)) * 100;
+    coursePercentage = coursePercent.toFixed(2);
+  }
 
-  const studentsData = Object.keys(getUserCountMockData[0].data).map((key) => ({
-    name: key,
-    true: getUserCountMockData[0].data[key].true || 0,
-    false: getUserCountMockData[0].data[key].false || 0,
-  }));
+  let studentsData = [];
 
-  const courseCountData = Object.keys(getCourseCountMockData[0].data).map(
-    (key) => ({
+  if (getUserCountMockData && getUserCountMockData.data) {
+    studentsData = Object.keys(getUserCountMockData.data).map((key) => ({
       name: key,
-      true: getCourseCountMockData[0].data[key].true || 0,
-      false: getCourseCountMockData[0].data[key].false || 0,
-    })
-  );
+      true: getUserCountMockData.data[key].true || 0,
+      false: getUserCountMockData.data[key].false || 0,
+    }));
+  } else {
+    console.error("getUserCountMockData.data is undefined or null");
+  }
 
-  // Find the most popular course based on true counts
+  let courseCountData = [];
+
+  if (getCourseCountMockData && getCourseCountMockData.data) {
+    courseCountData = Object.keys(getCourseCountMockData.data).map((key) => ({
+      name: key,
+      true: getCourseCountMockData.data[key].true || 0,
+      false: getCourseCountMockData.data[key].false || 0,
+    }));
+  } else {
+    console.error("getCourseCountMockData.data is undefined or null");
+  }
+
   let mostPopularCourse = { name: "", trueCount: 0 };
-  Object.keys(getCourseCountMockData[0].data).forEach((courseId) => {
-    const course = getCourseCountMockData[0].data[courseId];
-    const trueCount = course.true || 0;
 
-    if (trueCount > mostPopularCourse.trueCount) {
-      mostPopularCourse = { name: courseId, trueCount: trueCount };
-    }
-  });
+  if (getCourseCountMockData && getCourseCountMockData.data) {
+    Object.keys(getCourseCountMockData.data).forEach((courseId) => {
+      const course = getCourseCountMockData.data[courseId];
+      const trueCount = course.true || 0;
+
+      if (trueCount > mostPopularCourse.trueCount) {
+        mostPopularCourse = { name: courseId, trueCount: trueCount };
+      }
+    });
+  }
 
   console.log("Most Pop: ", mostPopularCourse);
 
@@ -507,12 +222,10 @@ const ProgressCriteria = () => {
     setValue(newValue);
   };
 
-  //Progress Calculation
-  const percentage =
-    (mockProgressData[0].data.trueCount / mockProgressData[0].data.totalCount) *
-    100;
+  // Progress Calculation
+  const percentage = (trueProgressCount / totalProgressCount) * 100;
 
-  const roundedPercentage = percentage.toFixed(2);
+  roundedPercentage = percentage.toFixed(2);
 
   console.log("Percentage: ", roundedPercentage);
 
@@ -540,8 +253,7 @@ const ProgressCriteria = () => {
                     }
                     subheader={
                       <Typography variant="h7" fontWeight={"bold"}>
-                        Total Student Enrolments:{" "}
-                        {mockProgressData[0].data.totalCount}
+                        Total Student Enrolments: {totalProgressCount}
                       </Typography>
                     }
                     sx={{
@@ -625,7 +337,7 @@ const ProgressCriteria = () => {
                   <Grid
                     item
                     xs={2}
-                    sx={{ position: "relative", left: "550px" }}
+                    sx={{ position: "relative", left: "650px" }}
                   >
                     <CircularProgressbar
                       value={coursePercentage}
@@ -644,7 +356,7 @@ const ProgressCriteria = () => {
                   <Grid
                     item
                     xs={2}
-                    sx={{ position: "relative", left: "580px" }}
+                    sx={{ position: "relative", left: "650px" }}
                   >
                     <Typography>Total Course Completions</Typography>
                   </Grid>
