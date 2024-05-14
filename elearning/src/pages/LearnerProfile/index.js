@@ -5,71 +5,98 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CourseContent from "./LearnerCourseContent";
-import { useUserName } from "../../hooks/customHooks";
+import { useUserName, useUserID } from "../../hooks/customHooks";
+import apiDefinitions from "../../api/apiDefinitions";
+import toast from "react-hot-toast";
 
-const data = [
-  {
-    id: "663f1621e00e5a1596d7ac12",
-    userId: "user01@7",
-    courseId: "C002",
-    course: {
-      data: {
-        id: "663b877583bee14060f7b032",
-        courseId: "C001",
-        name: "Artificial Inteligance",
-        conductorId: "CD001",
-        approved: false,
-        description: "Learn Artificial Inteligance A to Z",
-        createdAt: "2024-05-08T14:08:52.988+00:00",
-        updatedAt: null,
-        url: null,
-      },
-      message: "Course found",
-      status: 200,
-    },
-    createdAt: "2024-05-11T06:54:24.466+00:00",
-    updatedAt: null,
-    status: false,
-  },
-  {
-    id: "663db14bf9a86a0d80a95ea5",
-    userId: "user01@7",
-    courseId: "C001",
-    course: {
-      data: {
-        id: "663b877583bee14060f7b032",
-        courseId: "C001",
-        name: "Artificial Inteligance",
-        conductorId: "CD001",
-        approved: false,
-        description: "Learn Artificial Inteligance A to Z",
-        createdAt: "2024-05-08T14:08:52.988+00:00",
-        updatedAt: null,
-      },
-      message: "Course found",
-      status: 200,
-    },
-    createdAt: "2024-05-10T05:31:55.329+00:00",
-    updatedAt: "2024-05-10T06:58:32.905+00:00",
-    status: true,
-  },
-];
+// const data = [
+//   {
+//     id: "663f1621e00e5a1596d7ac12",
+//     userId: "user01@7",
+//     courseId: "C002",
+//     course: {
+//       data: {
+//         id: "663b877583bee14060f7b032",
+//         courseId: "C001",
+//         name: "Artificial Inteligance",
+//         conductorId: "CD001",
+//         approved: false,
+//         description: "Learn Artificial Inteligance A to Z",
+//         createdAt: "2024-05-08T14:08:52.988+00:00",
+//         updatedAt: null,
+//         url: null,
+//       },
+//       message: "Course found",
+//       status: 200,
+//     },
+//     createdAt: "2024-05-11T06:54:24.466+00:00",
+//     updatedAt: null,
+//     status: false,
+//   },
+//   {
+//     id: "663db14bf9a86a0d80a95ea5",
+//     userId: "user01@7",
+//     courseId: "C001",
+//     course: {
+//       data: {
+//         id: "663b877583bee14060f7b032",
+//         courseId: "C001",
+//         name: "Artificial Inteligance",
+//         conductorId: "CD001",
+//         approved: false,
+//         description: "Learn Artificial Inteligance A to Z",
+//         createdAt: "2024-05-08T14:08:52.988+00:00",
+//         updatedAt: null,
+//       },
+//       message: "Course found",
+//       status: 200,
+//     },
+//     createdAt: "2024-05-10T05:31:55.329+00:00",
+//     updatedAt: "2024-05-10T06:58:32.905+00:00",
+//     status: true,
+//   },
+// ];
 
 const LearnerProfile = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const username = useUserName();
+  const [enrolId, setEnrolId] = useState("");
+  const [data, setData] = useState([]);
+  const username = useUserName() || "";
+  const userId = useUserID() || "";
 
-  const handleOnCourseClick = (course) => {
+  const handleOnCourseClick = (course, enrolID) => {
     setSelectedCourse(course);
+    setEnrolId(enrolID);
     console.log(course);
+    console.log(enrolID);
   };
+
+  useEffect(() => {
+    if (userId !== "") {
+      apiDefinitions
+        .getEnrolmentsByUserId(userId)
+        .then((res) => {
+          if (res.data.status === 200) {
+            setData(res.data.data);
+            console.log(res.data.data);
+          } else {
+            throw new Error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(`Error: ${err.message}`);
+        });
+    }
+  }, [userId]);
 
   if (selectedCourse) {
     return (
       <CourseContent
         course={selectedCourse}
+        enrolId={enrolId}
         onBack={() => setSelectedCourse(null)}
       />
     );
@@ -102,15 +129,17 @@ const LearnerProfile = () => {
           key={index}
         >
           <Card
-            sx={{ maxWidth: 345 }}
-            onClick={(e) => handleOnCourseClick(course.courseId)}
+            sx={{ width: "100%", height: "100%" }}
+            onClick={(e) => handleOnCourseClick(course.courseId, course.id)}
           >
             <CardActionArea>
               <CardMedia
                 component="img"
                 height="140"
                 image={
-                  course.url ? course.url : "https://source.unsplash.com/random"
+                  course.course.data.url
+                    ? course.course.data.url
+                    : "https://source.unsplash.com/random"
                 }
                 alt="green iguana"
               />

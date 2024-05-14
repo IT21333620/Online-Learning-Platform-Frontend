@@ -1,13 +1,12 @@
-import {
-    Box,
-    Button,
-    Card,
-    CardActionArea,
-    Grid
-} from "@mui/material";
+import { Box, Button, Card, CardActionArea, Grid } from "@mui/material";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import Swal from "sweetalert2";
+import React, { useState, useEffect } from "react";
+import apiDefinitions from "../../../api/apiDefinitions";
+import toast from "react-hot-toast";
+import { useUserID } from "../../../hooks/customHooks";
+import Home from '../index'
 
 const data = {
   id: "663a620baff39f74c16e50f9",
@@ -67,25 +66,92 @@ const courseData = [
 ];
 
 const OpenCourse = ({ course, onBack }) => {
-  console.log(course);
+  const [data, setData] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+  const [enrollSuceess, setEnrollSuccess] = useState(false);
 
-  const handleEnroll = (id) => {
-    console.log(id);
+  const courseId = course;
+  const userID = useUserID() || "";
+  console.log(courseId);
+  console.log(userID);
+
+  useEffect(() => {
+    if (courseId !== "") {
+      apiDefinitions
+        .getCourseById(courseId)
+        .then((res) => {
+          if (res.data.status === 200) {
+            setData(res.data.data);
+            console.log(res.data.data);
+          } else {
+            throw new Error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(`Error: ${err.message}`);
+        });
+    }
+  }, [courseId]);
+
+  useEffect(() => {
+    if (courseId !== "") {
+      apiDefinitions
+        .getCourseContentById(courseId)
+        .then((res) => {
+          if (res.data.status === 200) {
+            setCourseData(res.data.data);
+            console.log(res.data.data);
+          } else {
+            throw new Error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(`Error: ${err.message}`);
+        });
+    }
+  }, [courseId]);
+
+  if (enrollSuceess) {
+    return <Home />;
+  }
+
+  const handleEnrolmentAdd = () => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
+      title: "Are you sure you want enroll this course?",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Enroll!",
+      confirmButtonText: "Enroll",
+      cancelButtonText: "Cancel",
+      customClass: {
+        popup: "swal2-popup",
+      },
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Enrolled!",
-          text: "Enrolled.",
-          icon: "success",
-        });
+        const payload = {
+          userId: userID,
+          courseId: courseId,
+          status: false,
+        };
+
+        console.log("Payload:", payload);
+
+        apiDefinitions
+          .postEnrollToCourse(payload)
+          .then((res) => {
+            if (res.data.status === 201) {
+              toast.success("Successfully Enrolled!");
+              setEnrollSuccess(true);
+            } else {
+              throw new Error(res.data.message);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            toast.error( `Error Enrolling to Course! ${err.response.data.message}`);
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire("Cancelled Enrolment", "", "info");
       }
     });
   };
@@ -171,7 +237,7 @@ const OpenCourse = ({ course, onBack }) => {
         <Button
           variant="contained"
           color="success"
-          onClick={() => handleEnroll(data.courseId)}
+          onClick={handleEnrolmentAdd}
         >
           Enroll
         </Button>
