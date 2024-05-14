@@ -15,6 +15,21 @@ const apiDefinitions = {
   createPayment: async function () {
     return await api.post(`stripe/charge`);
   },
+
+  //get all progress
+  getAllProgress: async function () {
+    return await api.get(`learnerProgress/getAllProgress`);
+  },
+
+  //get all progress by course
+  getAllProgressByCourse: async function () {
+    return await api.get(`learnerProgress/getCourseIdCounts`);
+  },
+
+  //get all progress by students
+  getAllProgressByStudent: async function () {
+    return await api.get(`learnerProgress/getUserIdCounts`);
+  },
 };
 
 export default apiDefinitions;
