@@ -12,11 +12,13 @@ import Authentication from "./helpers/Authentication";
 import PaymentInterface from "./components/PaymentInterface";
 import PaymentSuccess from "./components/PaymentSuccess";
 import PaymentCencel from "./components/PaymentCancel";
+import { Toaster } from 'react-hot-toast'
 
 function App() {
   return (
     <>
       <ReactKeycloakProvider authClient={keycloak}>
+        <Toaster position='top-right' reverseOrder={false}/>
         <Router>
           <Routes>
             <Route
