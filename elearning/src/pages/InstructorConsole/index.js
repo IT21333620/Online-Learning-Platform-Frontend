@@ -1,69 +1,45 @@
 import { Icon } from "@iconify/react";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea, CardActions, useRadioGroup } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
-import CourseContent from "./CourseContent";
+import React, { useEffect, useState } from "react";
+import apiDefinitions from "../../api/apiDefinitions";
 import { useUserName } from "../../hooks/customHooks";
 import AddCourse from "./AddCourse";
-
-const data = [
-  {
-    id: "663a620baff39f74c16e50f9",
-    courseId: "SE3012",
-    name: "Distributed Systems",
-    conductorId: "dr2321",
-    approved: false,
-    description: "Detailed course about Distributed Systems and it's nature",
-    createdAt: "2024-05-07T17:16:59.016+00:00",
-    updatedAt: null,
-    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/ba88e563-081f-4482-8994-f2f874b89df9.png?alt=media",
-  },
-  {
-    id: "663b877583bee14060f7b032",
-    courseId: "C001",
-    name: "Artificial Inteligance",
-    conductorId: "CD001",
-    approved: false,
-    description: "Learn Artificial Inteligance A to Z with practical examples",
-    createdAt: "2024-05-08T14:08:52.988+00:00",
-    updatedAt: null,
-    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/ae759d7e-ecef-454d-adbf-8050cda72009.jpg?alt=media",
-  },
-  {
-    id: "663b881f83bee14060f7b033",
-    courseId: "C002",
-    name: "Machine Learning",
-    conductorId: "CD002",
-    approved: false,
-    description: "Learn Artificial Inteligance & Machine Learning A to Z",
-    createdAt: "2024-05-08T14:11:43.932+00:00",
-    updatedAt: null,
-    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/5c085329-7c09-4413-9992-a06e8ca308e1.jpeg?alt=media",
-  },
-  {
-    id: "663dae641a0930661c35c3ae",
-    courseId: "SE3050",
-    name: "Deep Learning",
-    conductorId: "dr2321",
-    approved: true,
-    description: "Detailed course about Mechine learning and deep learning",
-    createdAt: "2024-05-10T05:19:32.456+00:00",
-    updatedAt: null,
-    url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/30939ab3-eeb8-455d-9e8b-1b21bc73e177.png?alt=media",
-  },
-];
+import CourseContent from "./CourseContent";
 
 const InstructorConsole = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const username = useUserName();
+  const [data, setData] = useState([]);
 
   const handleOnCourseClick = (course) => {
     setSelectedCourse(course);
   };
+
+  useEffect(() => {
+    apiDefinitions
+      .getCoursesByInstructor("dr2321")
+      .then((res) => {
+        console.log(res.data.status);
+        if (res.data.status === 200) {
+          setData(res.data.data);
+          console.log(res.data.data);
+        } else {
+          setData([]);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   if (selectedCourse) {
     return (
@@ -97,7 +73,7 @@ const InstructorConsole = () => {
           key={index}
         >
           <Card
-            sx={{ maxWidth: 345 }}
+            sx={{ width: "100%", height: "100%" }}
             onClick={(e) => handleOnCourseClick(course.courseId)}
           >
             <CardActionArea>

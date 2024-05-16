@@ -6,10 +6,9 @@ const MyDrop = ({ onFileAccepted }) => {
   const [file, setFile] = useState(null);
 
   const handleUpload = (acceptedFiles) => {
-    // Assuming you only accept one file
     const uploadedFile = acceptedFiles[0];
     setFile(uploadedFile);
-    onFileAccepted(uploadedFile); // Pass the accepted file to the parent component
+    onFileAccepted(uploadedFile);
   };
 
   return (

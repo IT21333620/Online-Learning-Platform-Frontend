@@ -7,6 +7,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Swal from "sweetalert2";
 import MyDrop from "./MyDrop";
+import apiDefinitions from "../../../api/apiDefinitions";
 
 const ContentAdd = (prop) => {
   const [open, setOpen] = useState(false);
@@ -15,15 +16,13 @@ const ContentAdd = (prop) => {
   const [acceptedFile, setAcceptedFile] = useState(null);
   const course = useState(prop.id);
 
-
   const handleFileAccepted = (file) => {
     setAcceptedFile(file);
   };
 
-
   useEffect(() => {
-    console.log(acceptedFile)
-    }, [acceptedFile]);
+    console.log(acceptedFile);
+  }, [acceptedFile]);
 
   const handleAddValue = (field, value) => {
     setAddNew((previous) => ({
@@ -80,22 +79,45 @@ const ContentAdd = (prop) => {
     }
 
     if (isValid) {
+      const payload = {
+        title: addNew.title,
+        description: addNew.description,
+      };
 
-        const payload = {
-            title: addNew.title,
-            description: addNew.description,
-        }
+      const formData = new FormData();
+      formData.append("file", acceptedFile);
+      formData.append(
+        "courseContent",
+        new Blob([JSON.stringify(payload)], { type: "application/json" })
+      );
 
-        const formData = new FormData()
-        formData().append("file", acceptedFile);
-        formData().append("courseContent", JSON.stringify(payload));
-
-      Swal.fire({
-        title: "Success",
-        text: "Content added successfully",
-        icon: "success",
-        confirmButtonText: "Ok",
-      });
+      apiDefinitions
+        .postCourseContent(prop.id, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.data.status === 201) {
+            setOpen(false);
+            Swal.fire({
+              title: "Success",
+              text: "Content added successfully",
+              icon: "success",
+              confirmButtonText: "Ok",
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: "Content not added",
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 

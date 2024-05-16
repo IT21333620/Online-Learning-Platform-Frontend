@@ -17,68 +17,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import Swal from "sweetalert2";
 import ContentAdd from "./ContentAdd";
 import { useUserName } from "../../../hooks/customHooks";
+import apiDefinitions from "../../../api/apiDefinitions";
+import toast from "react-hot-toast";
 
-const data = {
-  id: "663a620baff39f74c16e50f9",
-  courseId: "SE3012",
-  name: "Distributed Systems",
-  conductorId: "dr2321",
-  approved: false,
-  description: "Detailed course about Distributed Systems and it's nature",
-  createdAt: "2024-05-07T17:16:59.016+00:00",
-  updatedAt: null,
-  url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/6ecec7c8-e25d-4efd-a46a-6c385fa0dfa8.jpg?alt=media",
-};
-
-const courseData = [
-  {
-    id: "663cfdb3d88f0333b9f6a229",
-    courseId: "SE3012",
-    title: "Part 1",
-    description: "Introduction to Distributed Systems in 2 hours",
-    media: {
-      id: "663cfdb2d88f0333b9f6a228",
-      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/419328cc-60d5-4cf5-8a1f-5097dedb40a2.mp4?alt=media",
-      createdAt: "2024-05-09T16:45:36.588+00:00",
-      updatedAt: null,
-    },
-    createdAt: "2024-05-09T16:45:39.150+00:00",
-    updatedAt: "2024-05-10T02:24:16.067+00:00",
-  },
-  {
-    id: "663cfde1d88f0333b9f6a22b",
-    courseId: "SE3012",
-    title: "Part 2",
-    description: "Web socket and message passing",
-    media: {
-      id: "663cfde1d88f0333b9f6a22a",
-      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/05efda6a-36ee-4599-90cd-69b8cdf0717d.jpg?alt=media",
-      createdAt: "2024-05-09T16:46:24.761+00:00",
-      updatedAt: null,
-    },
-    createdAt: "2024-05-09T16:46:25.670+00:00",
-    updatedAt: null,
-  },
-  {
-    id: "663d6885f7ee5f0df75d3e4c",
-    courseId: "SE3012",
-    title: "Part 2",
-    description: "Web socket and message passing",
-    media: {
-      id: "663d6885f7ee5f0df75d3e4b",
-      url: "https://firebasestorage.googleapis.com/v0/b/online-learning-platform-a414b.appspot.com/o/b5c30078-ce18-4cd1-841d-3e9f1ae1308a.png?alt=media",
-      createdAt: "2024-05-10T00:21:22.636+00:00",
-      updatedAt: null,
-    },
-    createdAt: "2024-05-10T00:21:25.512+00:00",
-    updatedAt: null,
-  },
-];
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -120,8 +66,49 @@ const CourseConetetn = ({ course, onBack }) => {
   const [updateId, setUpdateId] = useState(null);
   const [contentTitle, setContentTitle] = useState("");
   const [contentDescription, setContentDescription] = useState("");
+  const [data, setData] = useState({});
+  const [courseData, setCourseData] = useState([]);
+  const [reload, setReload] = useState(false);
 
   const username = useUserName();
+
+  useEffect(() => {
+    if (course !== "") {
+      apiDefinitions
+        .getCourseById(course)
+        .then((res) => {
+          if (res.data.status === 200) {
+            setData(res.data.data);
+            console.log(res.data.data);
+          } else {
+            throw new Error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(`Error: ${err.message}`);
+        });
+    }
+  }, [course]);
+
+useEffect(() => {
+    if (course !== "") {
+      apiDefinitions
+        .getCourseContentById(course)
+        .then((res) => {
+          if (res.data.status === 200) {
+            setCourseData(res.data.data);
+            console.log(res.data.data);
+          } else {
+            throw new Error(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          toast.error(`Error: ${err.message}`);
+        });
+    }
+  }, [course,reload]);
 
   function renderMedia(url) {
     const extension = url.split("?")[0].split(".").pop();
@@ -162,6 +149,15 @@ const CourseConetetn = ({ course, onBack }) => {
   const handleClickOpen = (id) => {
     setOpen(true);
     setUpdateId(id);
+
+    apiDefinitions.getSingleCourseContentById(id).then((res) => {
+      if (res.status === 200) {
+        setContentTitle(res.data.data.title);
+        setContentDescription(res.data.data.description);
+      } else {
+        console.error("Error fetching course content: ", res);
+      }
+    });
   };
 
   const handleOpen = () => {
@@ -188,18 +184,40 @@ const CourseConetetn = ({ course, onBack }) => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Deleted!",
-          text: "Content deleted.",
-          icon: "success",
-        });
+        apiDefinitions.deleteCourseContent(id)
+          .then((res) => {
+            if (res.status === 200) {
+              setReload(!reload);
+              Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+              )
+              // Refresh the data or remove the item from the state
+            }
+          })
+          .catch((error) => {
+            Swal.fire(
+              'Error!',
+              'There was an error deleting the file.',
+              'error'
+            )
+            console.error("Error deleting course content: ", error);
+          });
       }
     });
   };
 
+
   const handleUpdate = (id) => {
     handleClose();
     console.log(id);
+
+    const payload = {
+      title: contentTitle,
+      description: contentDescription,
+    };
+    
     Swal.fire({
       title: "Are you sure?",
       text: "Content of the course will updated for students as well!",
@@ -210,10 +228,25 @@ const CourseConetetn = ({ course, onBack }) => {
       confirmButtonText: "Yes, Update it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire({
-          title: "Updated!",
-          text: "Content updated.",
-          icon: "success",
+        apiDefinitions.putCourseContent(id,payload)
+        .then((res) => {
+          if (res.status === 200) {
+            setReload(!reload);
+            Swal.fire(
+              'Updated!',
+              'Content Updated.',
+              'success'
+            )
+            // Refresh the data or remove the item from the state
+          }
+        })
+        .catch((error) => {
+          Swal.fire(
+            'Error!',
+            'There was an error updating the file.',
+            'error'
+          )
+          console.error("Error updating course content: ", error);
         });
       } else {
         handleOpen();

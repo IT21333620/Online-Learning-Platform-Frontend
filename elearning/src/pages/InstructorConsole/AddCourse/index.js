@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MyDrop from "../CourseContent/MyDrop";
+import apiDefinitions from "../../../api/apiDefinitions";
 
 const AddCourse = () => {
   const [open, setOpen] = useState(false);
@@ -42,48 +43,107 @@ const AddCourse = () => {
   };
 
   useEffect(() => {
-    if (addNew && !addNew.title == "") {
-      handleErrors("title", false);
+    if (addNew && !addNew.courseId == "") {
+      handleErrors("courseId", false);
     } else {
-      handleErrors("title", true);
+      handleErrors("courseId", true);
     }
-  }, [addNew.title]);
+  }, [addNew.courseId]);
+
+  useEffect(() => {
+    if (addNew && !addNew.name == "") {
+      handleErrors("name", false);
+    } else {
+      handleErrors("name", true);
+    }
+  }, [addNew.name]);
+
+  useEffect(() => {
+    if (addNew && !addNew.description == "") {
+      handleErrors("description", false);
+    } else {
+      handleErrors("description", true);
+    }
+  }, [addNew.description]);
 
   const handleAdd = () => {
-    console.log("dads");
     let isValid = true;
-    if (!addNew.title) {
-      handleErrors("title", true);
+
+    if (!addNew.courseId) {
+      handleErrors("courseId", true);
       isValid = false;
     }
+
+    if (!addNew.name) {
+      handleErrors("name", true);
+      isValid = false;
+    }
+
     if (!addNew.description) {
       handleErrors("description", true);
       isValid = false;
     }
 
+    if (!acceptedFile) {
+      handleErrors("file", true);
+      isValid = false;
+    }
+
+    console.log(isValid);
+
     if (isValid) {
+      const payload = {
+        courseId: "123",
+        conductorId: "123",
+        name: addNew.name,
+        description: addNew.description,
+      };
 
-        const payload = {
-            title: addNew.title,
-            description: addNew.description,
-        }
+      console.log(acceptedFile);
+      console.log(payload);
 
-        const formData = new FormData()
-        formData().append("file", acceptedFile);
-        formData().append("courseContent", JSON.stringify(payload));
+      const formData = new FormData();
+      formData.append("file", acceptedFile);
+      // formData.append("course", JSON.stringify(payload));
+      formData.append(
+        "course",
+        new Blob([JSON.stringify(payload)], { type: "application/json" })
+      );
 
-      Swal.fire({
-        title: "Success",
-        text: "Content added successfully",
-        icon: "success",
-        confirmButtonText: "Ok",
-      });
+      console.log(formData);
+
+      apiDefinitions
+        .postCourseContent(formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.data.status === 201) {
+            Swal.fire({
+              title: "Success",
+              text: "Content added successfully",
+              icon: "success",
+              confirmButtonText: "Ok",
+            });
+          } else {
+            Swal.fire({
+              title: "Error",
+              text: "Content not added",
+              icon: "error",
+              confirmButtonText: "Ok",
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} sx={{display:'flex',justifyContent:'flex-end'}}>
+      <Grid item xs={12} sx={{ display: "flex", justifyContent: "flex-end" }}>
         <Button
           variant="contained"
           color="primary"
@@ -111,7 +171,8 @@ const AddCourse = () => {
         <DialogTitle>Add Course</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Add your next Course here. You can add course related image. This may take time based on your connection
+            Add your next Course here. You can add course related image. This
+            may take time based on your connection
           </DialogContentText>
           <TextField
             value={addNew.courseId}

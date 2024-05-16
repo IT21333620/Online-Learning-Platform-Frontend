@@ -52,6 +52,37 @@ const apiDefinitions = {
   createPayment: async function () {
     return await api.post(`stripe/charge`);
   },
+
+  //get all courses by instructor id
+  getCoursesByInstructor: async function (instructorId) {
+    return await api.get(`courses/Get-all-courses-by-conductorId/${instructorId}`);
+  },
+
+  //add course 
+  postCourseContent: async function (payload) {
+    return await api.post(`courses/add-course`, payload);
+  },
+
+  //getCourseContentById
+  getSingleCourseContentById: async function (id) {
+    return await api.get(`content/get-course-content-By-ID/${id}`);
+  },
+
+  //add course content
+  postCourseContent: async function (id,payload) {
+    return await api.post(`content/add-course-content/${id}`, payload);
+  },
+
+  //update course content
+  putCourseContent: async function (id, payload) {
+    return await api.put(`content/update-course-content/${id}`, payload);
+  },
+
+  //delete course content
+  deleteCourseContent: async function (id) {
+    return await api.delete(`content/delete-course-content/${id}`);
+  },
+  
 };
 
 export default apiDefinitions;
